@@ -1,144 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Mini Games Hub</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Mini Games Zone</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    /* Base Styles */
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #1e1e2f, #292b40);
-      color: #fff;
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      text-align: center;
-      overflow-x: hidden;
     }
 
-    header {
-      background: #27293d;
-      padding: 1.5rem;
-      font-size: 2.5rem;
-      font-weight: bold;
-      letter-spacing: 1px;
-      animation: slideDown 1s ease-out;
-    }
-
-    /* Game Cards */
-    .games-list {
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1d1f21, #2d3436);
+      color: white;
+      min-height: 100vh;
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
       padding: 2rem;
+    }
+
+    h1 {
+      margin-bottom: 1.5rem;
+      font-size: 2.5rem;
+      text-shadow: 2px 2px #000;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       gap: 1.5rem;
-      animation: fadeIn 1.2s ease-in;
+      width: 100%;
+      max-width: 900px;
     }
 
-    .game-card {
-      background: #343654;
-      padding: 1.2rem;
-      width: 240px;
+    .card {
+      background: #2f3542;
       border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
-      transition: transform 0.3s ease, background 0.3s;
-      animation: popUp 0.6s ease forwards;
-      opacity: 0;
     }
 
-    .game-card:hover {
-      transform: translateY(-8px) scale(1.05);
-      background: #3d4068;
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.4);
     }
 
-    /* Iframe & Back Button */
-    iframe {
-      border: none;
-      margin-top: 2rem;
-      animation: fadeIn 1s;
+    .card h2 {
+      margin-bottom: 0.5rem;
     }
 
-    .back-button {
+    .card p {
+      font-size: 0.95rem;
+      color: #ccc;
+    }
+
+    .card a {
+      display: inline-block;
       margin-top: 1rem;
-      background: #555;
-      color: #fff;
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      border: none;
+      text-decoration: none;
+      color: #00ffff;
+      font-weight: bold;
+      border: 2px solid #00ffff;
+      padding: 0.4rem 1rem;
       border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
+      transition: all 0.2s ease;
     }
 
-    .back-button:hover {
-      background: #777;
+    .card a:hover {
+      background: #00ffff;
+      color: #000;
     }
 
-    /* Animations */
-    @keyframes slideDown {
-      from {
-        transform: translateY(-100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    @keyframes popUp {
-      0% {
-        transform: scale(0.9);
-        opacity: 0;
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-      }
+    footer {
+      margin-top: 3rem;
+      font-size: 0.9rem;
+      color: #aaa;
     }
   </style>
 </head>
 <body>
-  <header>🎮 Time pass games</header>
+  <h1>🎮 Time pass games</h1>
 
-  <div id="home" class="games-list">
-    <div class="game-card" style="animation-delay: 0s" onclick="launchGame('tic-tac-toe')">Tic Tac Toe</div>
-    <div class="game-card" style="animation-delay: 0.1s" onclick="launchGame('snake')">Snake (Coming Soon)</div>
-    <div class="game-card" style="animation-delay: 0.2s" onclick="launchGame('pong')">Pong (Coming Soon)</div>
+  <div class="game-grid">
+    <div class="card">
+      <h2>🧠 Tic Tac Toe</h2>
+      <p>Classic 2-player game. Can you get 3 in a row?</p>
+      <a href="tic-tac-toe.html">Play Now</a>
+    </div>
+
+    <div class="card">
+      <h2>🐭 Rat & Cheese</h2>
+      <p>Chomp cheese and avoid the wall! A rodent twist on Snake.</p>
+      <a href="snake.html">Play Now</a>
+    </div>
+
+    <div class="card">
+      <h2>🏓 Pong</h2>
+      <p>The original paddle battle. Versus AI!</p>
+      <a href="pong.html">Play Now</a>
+    </div>
   </div>
 
-  <div id="game-frame" style="display:none;">
-    <button class="back-button" onclick="goHome()">⬅ Back</button>
-    <iframe id="iframe" width="600" height="600"></iframe>
-  </div>
-
-  <script>
-    function launchGame(gameName) {
-      const iframe = document.getElementById('iframe');
-      document.getElementById('home').style.display = 'none';
-      document.getElementById('game-frame').style.display = 'block';
-      if (gameName === 'tic-tac-toe') {
-        iframe.src = 'tic-tac-toe.html';
-      } else {
-        iframe.srcdoc = '<h2 style="color:white;text-align:center;padding:2rem;">🚧 Coming Soon!</h2>';
-      }
-    }
-
-    function goHome() {
-      document.getElementById('home').style.display = 'flex';
-      document.getElementById('game-frame').style.display = 'none';
-      document.getElementById('iframe').src = '';
-    }
-  </script>
+  <footer>
+    &copy; 2025 Mini Games Zone | Made with ❤️ by Ravi
+  </footer>
 </body>
 </html>
