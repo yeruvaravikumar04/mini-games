@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rat & Cheese Game</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 1rem;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #55422e, #a68f66);
+      color: white;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 0.5rem;
+    }
+
+    canvas {
+      background-color: #fffbe6;
+      border: 5px solid #333;
+      display: block;
+      margin: 0 auto;
+      box-shadow: 0 0 20px #000;
+    }
+
+    .score {
+      font-size: 1.2rem;
+      margin-top: 1rem;
+    }
+
+    .reset-btn {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background: #c97d30;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .reset-btn:hover {
+      background: #d08b3e;
+    }
+  </style>
+</head>
+<body>
+  <h2>🐭 Rat & Cheese Game</h2>
+  <canvas id="gameCanvas" width="400" height="400"></canvas>
+  <div class="score">Cheese Collected: <span id="score">0</span></div>
+  <button class="reset-btn" onclick="startGame()">🔁 Reset</button>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const gridSize = 20;
+    const tileCount = canvas.width / gridSize;
+
+    let rat, cheese, dx, dy, score, gameInterval;
+    let keyPressed = false;
+
+    function startGame() {
+      dx = 1;
+      dy = 0;
+      score = 0;
+      rat = [
+        { x: 8, y: 10 },
+        { x: 7, y: 10 },
+        { x: 6, y: 10 }
+      ];
+      placeCheese();
+      document.getElementById('score').textContent = score;
+      clearInterval(gameInterval);
+      gameInterval = setInterval(draw, 500); // 0.5 seconds
+    }
+
+    function draw() {
+      keyPressed = false;
+
+      // Clear canvas
+      ctx.fillStyle = '#fffbe6';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Draw cheese
+      ctx.fillStyle = '#ffd700';
+      ctx.beginPath();
+      ctx.moveTo(cheese.x * gridSize + 10, cheese.y * gridSize + 5);
+      ctx.lineTo(cheese.x * gridSize + 15, cheese.y * gridSize + 15);
+      ctx.lineTo(cheese.x * gridSize + 5, cheese.y * gridSize + 15);
+      ctx.closePath();
+      ctx.fill();
+
+      // Move rat
+      const head = { x: rat[0].x + dx, y: rat[0].y + dy };
+
+      if (
+        head.x < 0 || head.x >= tileCount ||
+        head.y < 0 || head.y >= tileCount ||
+        rat.some(s => s.x === head.x && s.y === head.y)
+      ) {
+        clearInterval(gameInterval);
+        alert('Game Over! Cheese Collected: ' + score);
+        return;
+      }
+
+      rat.unshift(head);
+
+      if (head.x === cheese.x && head.y === cheese.y) {
+        score++;
+        document.getElementById('score').textContent = score;
+        placeCheese();
+      } else {
+        rat.pop();
+      }
+
+      // Draw rat
+      for (let i = 0; i < rat.length; i++) {
+        const part = rat[i];
+        const isHead = i === 0;
+
+        // Head with ears
+        if (isHead) {
+          ctx.fillStyle = '#5c4033';
+          ctx.beginPath();
+          ctx.arc(part.x * gridSize + 10, part.y * gridSize + 10, 9, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Ears
+          ctx.fillStyle = '#7c5f48';
+          ctx.beginPath();
+          ctx.arc(part.x * gridSize + 6, part.y * gridSize + 6, 3, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(part.x * gridSize + 14, part.y * gridSize + 6, 3, 0, Math.PI * 2);
+          ctx.fill();
+        } else {
+          ctx.fillStyle = '#8b5e3c';
+          ctx.beginPath();
+          ctx.arc(part.x * gridSize + 10, part.y * gridSize + 10, 8, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    function placeCheese() {
+      cheese = {
+        x: Math.floor(Math.random() * tileCount),
+        y: Math.floor(Math.random() * tileCount)
+      };
+      if (rat.some(s => s.x === cheese.x && s.y === cheese.y)) {
+        placeCheese(); // retry if on rat
+      }
+    }
+
+    function setDirection(x, y) {
+      if (keyPressed) return;
+      if (dx === -x && dy === -y) return;
+      dx = x;
+      dy = y;
+      keyPressed = true;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      switch (e.key) {
+        case 'ArrowUp': setDirection(0, -1); break;
+        case 'ArrowDown': setDirection(0, 1); break;
+        case 'ArrowLeft': setDirection(-1, 0); break;
+        case 'ArrowRight': setDirection(1, 0); break;
+      }
+    });
+
+    startGame();
+  </script>
+</body>
+</html>
