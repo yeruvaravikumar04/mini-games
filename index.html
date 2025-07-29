@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mini Games Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Base Styles */
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #292b40);
+      color: #fff;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      overflow-x: hidden;
+    }
+
+    header {
+      background: #27293d;
+      padding: 1.5rem;
+      font-size: 2.5rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+      animation: slideDown 1s ease-out;
+    }
+
+    /* Game Cards */
+    .games-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 2rem;
+      gap: 1.5rem;
+      animation: fadeIn 1.2s ease-in;
+    }
+
+    .game-card {
+      background: #343654;
+      padding: 1.2rem;
+      width: 240px;
+      border-radius: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s ease, background 0.3s;
+      animation: popUp 0.6s ease forwards;
+      opacity: 0;
+    }
+
+    .game-card:hover {
+      transform: translateY(-8px) scale(1.05);
+      background: #3d4068;
+    }
+
+    /* Iframe & Back Button */
+    iframe {
+      border: none;
+      margin-top: 2rem;
+      animation: fadeIn 1s;
+    }
+
+    .back-button {
+      margin-top: 1rem;
+      background: #555;
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .back-button:hover {
+      background: #777;
+    }
+
+    /* Animations */
+    @keyframes slideDown {
+      from {
+        transform: translateY(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes popUp {
+      0% {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>🎮 Time pass games</header>
+
+  <div id="home" class="games-list">
+    <div class="game-card" style="animation-delay: 0s" onclick="launchGame('tic-tac-toe')">Tic Tac Toe</div>
+    <div class="game-card" style="animation-delay: 0.1s" onclick="launchGame('snake')">Snake (Coming Soon)</div>
+    <div class="game-card" style="animation-delay: 0.2s" onclick="launchGame('pong')">Pong (Coming Soon)</div>
+  </div>
+
+  <div id="game-frame" style="display:none;">
+    <button class="back-button" onclick="goHome()">⬅ Back</button>
+    <iframe id="iframe" width="600" height="600"></iframe>
+  </div>
+
+  <script>
+    function launchGame(gameName) {
+      const iframe = document.getElementById('iframe');
+      document.getElementById('home').style.display = 'none';
+      document.getElementById('game-frame').style.display = 'block';
+      if (gameName === 'tic-tac-toe') {
+        iframe.src = 'tic-tac-toe.html';
+      } else {
+        iframe.srcdoc = '<h2 style="color:white;text-align:center;padding:2rem;">🚧 Coming Soon!</h2>';
+      }
+    }
+
+    function goHome() {
+      document.getElementById('home').style.display = 'flex';
+      document.getElementById('game-frame').style.display = 'none';
+      document.getElementById('iframe').src = '';
+    }
+  </script>
+</body>
+</html>
